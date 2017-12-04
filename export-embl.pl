@@ -14,7 +14,7 @@ $Text::Wrap::unexpand = 0;
 my $cwd = cwd();
 
 if (!(defined($ARGV[1]))) {
-   print "Usage: export-embl.pl <tbl-file> <extras-file> <classification> <fastafil>\n";
+   print "Usage: fetch-slice-features.pl <tbl-file> <extras-file> <classification> <fastafil>\n";
    exit;
 }
 
@@ -131,6 +131,9 @@ while (my $line = <INFILE>) {
    if ($iid =~ /^orf68/) {
 	   $iid = "orf69";
    }
+   if ($iid =~ /^orf174/) {
+	   $iid = "orf147";
+   }
    if ($iid =~ /^ycf/) {
 	   $iid =~ s/_/ /;
    }
@@ -156,7 +159,6 @@ close(INFILE);
 
 my $species;
 my $cv;
-my $sv;
 my $oc;
 my $tax;
 my $project;
@@ -170,9 +172,7 @@ while (my $line = <INFILE>) {
       (undef,$species) = split /:/, $line, 2;
    } elsif ($line =~ /^cv:/) {
       (undef,$cv) = split /:/, $line, 2;
-   } elsif ($line =~ /^sv:/) {
-      (undef,$sv) = split /:/, $line, 2;
-   }  elsif ($line =~ /^oc:/) { 
+   } elsif ($line =~ /^oc:/) {
       (undef,$oc) = split /:/, $line, 2;
       $oc =~ s/^://;
    } elsif ($line =~ /^tax:/) {
@@ -214,8 +214,6 @@ if ((defined($project)) && (!($project eq ''))) {
 print OUTFILE "XX\n";
 if ((defined($cv)) && (!($cv eq ''))) {
    print OUTFILE "DE   ".$species." chloroplast complete genome, cultivar ".$cv."\n";
-} elsif ((defined($sv)) && (!($sv eq ''))) {
-   print OUTFILE "DE   ".$species." chloroplast complete genome, specimen voucher ".$sv."\n";	
 } else {
    print OUTFILE "DE   ".$species." chloroplast complete genome\n";
 }
@@ -253,9 +251,6 @@ if ((defined($cv)) && (!($cv eq ''))) {
 print OUTFILE "FT                   /organelle=\"plastid:chloroplast\"\n";
 if ((defined($cv)) && (!($cv eq ''))) {
 	print OUTFILE "FT                   /cultivar=\"".$cv."\"\n";
-}
-if ((defined($sv)) && (!($sv eq ''))) {
-	print OUTFILE "FT                   /specimen_voucher=\"".$sv."\"\n";
 }
 print OUTFILE "FT                   /mol_type=\"genomic DNA\"\n";
 if ((defined($tax)) && (!($tax eq ''))) {
@@ -413,9 +408,9 @@ for my $k (sort {$a<=>$b} keys %sortHash) {
 		      print OUTFILE "FT                   /codon_start=1\n";
 		      print OUTFILE "FT                   /transl_table=11\n";
 		   } else {
-                      print OUTFILE "FT   gene            complement(".$fst."..".$fen.")\n";
+                      print OUTFILE "FT   gene            ".$fst."..".$fen."\n";
 		      print OUTFILE 'FT                   /gene="'.$gnm.'"'."\n";
-		      print OUTFILE "FT   CDS             complement(".$fst."..".$fen.")\n";
+		      print OUTFILE "FT   CDS             ".$fst."..".$fen."\n";
 		      print OUTFILE 'FT                   /gene="'.$gnm.'"'."\n";
 		      print OUTFILE 'FT                   /product="'.$prod.'"'."\n";
 # Apply Text::Wrap or something to fix long note descriptors.
