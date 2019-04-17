@@ -10,3 +10,6 @@ map-reads2ref.pl
 
 download read files from NCBI's SRA, unpack them and map to a reference plastome with samtools. Merge multiple mapped bam files if needed, extract read depth at each reference position then export the log10 converted file ready for import to a drawing application.
 
+run-snp-caller.pl
+
+script to find SNPs in assembled chloroplasts by mapping reads back to the assembly and identifying SNPs via Picard tools, GATK and VarScan2
